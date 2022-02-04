@@ -1,5 +1,6 @@
 .TodoItem {
   background-color: #fafafa;
+  cursor: pointer;
   position: relative;
   display: flex;
   justify-content: center;
