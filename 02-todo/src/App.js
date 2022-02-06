@@ -14,7 +14,6 @@ import { TodoSearch } from "./components/TodoSearch";
 function App() {
   const localStorageTodos = localStorage.getItem("todos");
   let parsedTodos;
-  debugger;
   if (!localStorageTodos) {
     localStorage.setItem("todos", JSON.stringify([]));
     parsedTodos = [];
