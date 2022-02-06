@@ -11,17 +11,27 @@ import { TodoSearch } from "./components/TodoSearch";
 //   { text: "Aprender redux", completed: false },
 //   { text: "Aprender redux-saga", completed: false },
 // ];
-function App() {
-  const localStorageTodos = localStorage.getItem("todos");
-  let parsedTodos;
-  if (!localStorageTodos) {
-    localStorage.setItem("todos", JSON.stringify([]));
-    parsedTodos = [];
-  } else {
-    parsedTodos = JSON.parse(localStorageTodos);
-  }
 
-  const [todos, setTodos] = React.useState(parsedTodos);
+//react custom hook
+function useLocalStorage(itemName, initialValue) {
+  const localStorageItem = localStorage.getItem(itemName);
+  let parsedItem;
+  if (!localStorageItem) {
+    localStorage.setItem(itemName, JSON.stringify(initialValue));
+    parsedItem = [];
+  } else {
+    parsedItem = JSON.parse(localStorageItem);
+  }
+  const [item, setItem] = React.useState(parsedItem);
+
+  const saveItem = (newItem) => {
+    localStorage.setItem(itemName, JSON.stringify(newItem));
+    setItem(newItem);
+  };
+  return [item, saveItem];
+}
+function App() {
+  const [todos, saveItem] = useLocalStorage("todos", []);
   const [searchValue, setSearchValue] = React.useState("");
   const completedTodos = todos.filter((todo) => !!todo.completed).length;
   const totalTodos = todos.length;
@@ -37,18 +47,15 @@ function App() {
     const todoIndex = todos.findIndex((todo) => todo.text === text);
     const newTodos = [...todos];
     newTodos[todoIndex].completed = !newTodos[todoIndex].completed;
-    saveTodos(newTodos);
+    saveItem(newTodos);
   };
   const deleteTodo = (text) => {
     const todoIndex = todos.findIndex((todo) => todo.text === text);
     const newTodos = [...todos];
     newTodos.splice(todoIndex, 1);
-    saveTodos(newTodos);
+    saveItem(newTodos);
   };
-  const saveTodos = (newTodos) => {
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-    setTodos(newTodos);
-  };
+
   return (
     <React.Fragment>
       <TodoCounter total={totalTodos} completed={completedTodos} />
