@@ -6,6 +6,8 @@ import { TodoList } from "../components/TodoList";
 import { TodoSearch } from "../components/TodoSearch";
 
 const AppUI = ({
+  loading,
+  error,
   totalTodos,
   completedTodos,
   searchValue,
@@ -22,6 +24,10 @@ const AppUI = ({
       {/* <input placeholder="Todo a buscar" />
       <button>+</button> */}
       <TodoList>
+        {error && <p>Hubo un error...</p>}
+        {loading && <p>Estamos cargando...</p>}
+        {!loading && !searchedTodos.length && <p>Crea tu primer Todo!</p>}
+
         {searchedTodos.map((todo) => (
           <TodoItem
             key={todo.text}
